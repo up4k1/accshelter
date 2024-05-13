@@ -98,12 +98,14 @@ def select_sex(driver, sex):
 def register_and_save_account(name, surname, year):
     try:
         driver = create_firefox_browser()
-        register_account(driver, capmonster_api_key, name, surname, year)
+        if register_account(driver, capmonster_api_key, name, surname, year):
+            logging.info(f"Registration and profile saving completed for {name} {surname}")
+        else:
+            logging.info(f"Registration failed for {name} {surname}, profile not saved.")
     except Exception as e:
         logging.error(f"Error occurred for {name} {surname}: {str(e)}")
     finally:
         driver.quit()
-        logging.info(f"Registration and profile saving completed for {name} {surname}")
 
 
 def register_account(driver, capmonster_api_key, name, surname, year):

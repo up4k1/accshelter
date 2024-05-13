@@ -20,7 +20,7 @@ def load_saved_profile(profile_path):
     return driver
 
 def main():
-    profile_zip = './full_profiles/Дмитрий_Панов.zip'  # Абсолютный путь к архиву профиля
+    profile_zip = './full_profiles/Станислав_Виноградов.zip'  # Абсолютный путь к архиву профиля
     extract_to = './full_profiles/extracted'  # Путь, куда будет распакован профиль
     profile_path = extract_profile(profile_zip, extract_to)  # Распаковываем и получаем путь к профилю
     driver = load_saved_profile(profile_path)  # Загружаем профиль в браузер

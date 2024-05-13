@@ -20,12 +20,12 @@ def extract_and_load_profile(zip_profile_path, extract_to_dir):
     # Загружаем профиль в браузер
     options = Options()
     options.profile = profile_dir
-    service = Service(executable_path='path/to/geckodriver')  # Указываем путь к geckodriver
+    service = Service(executable_path='./geckodriver-0.34.0/geckodriver-0.34.0/')  # Указываем путь к geckodriver
     driver = webdriver.Firefox(options=options, service=service)
     return driver
 
 def main():
-    profile_zip = './full_profiles/Максим_Данилов.zip'  # Путь к ZIP-архиву с профилем
+    profile_zip = './full_profiles/Владимир_Майоров.zip'  # Путь к ZIP-архиву с профилем
     extract_to = './full_profiles/extracted'  # Папка для распаковки
     driver = extract_and_load_profile(profile_zip, extract_to)
     try:
