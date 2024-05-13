@@ -27,6 +27,9 @@ import logging
 import zipfile
 from dotenv import load_dotenv
 import os
+from browser import create_firefox_browser 
+
+
 
 load_dotenv()
 capmonster_api_key = os.getenv("CAPMONSTER_API_KEY")
@@ -70,24 +73,6 @@ def check_phone_request(driver):
         # Элемент не найден, значит запроса номера телефона нет
         return False
 
-def create_firefox_browser():
-    path_to_geckodriver = './geckodriver-0.34.0/geckodriver-0.34.0/'  # Путь к geckodriver
-    service = Service(executable_path=path_to_geckodriver)
-    options = Options()
-    options.set_preference("media.peerconnection.enabled", False)
-    options.set_preference("media.navigator.permission.disabled", True)
-    options.set_preference("media.navigator.streams.fake", True)
-    options.set_preference("network.proxy.type", 1)
-    options.set_preference("network.proxy.socks", "192.168.3.238")
-    options.set_preference("network.proxy.socks_port", 3066)
-    options.set_preference("network.proxy.socks_version", 5)
-    options.set_preference("network.proxy.socks_remote_dns", True)
-    user_agent = get_random_user_agent()
-    options.set_preference("general.useragent.override", user_agent)
-    # service = Service(GeckoDriverManager().install())
-    driver = webdriver.Firefox(service=service, options=options)
-    driver.set_window_size(1920, 1080)
-    return driver
 
 def human_type(element, text):
     for char in text:
