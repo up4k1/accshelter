@@ -2,6 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 def load_saved_profile(profile_path):
     # Установка настроек для Firefox
@@ -15,7 +19,7 @@ def load_saved_profile(profile_path):
     return driver
 
 def main():
-    profile_path = 'full_profiles/Михаил_Суворов.zip'  # Укажи правильный путь к профилю
+    profile_path = 'full_profiles/Степан_Гончаров.zip'  # Укажи правильный путь к профилю
     driver = load_saved_profile(profile_path)
     input("Press Enter to close the browser...")  # Пауза перед закрытием браузера
     driver.quit()
