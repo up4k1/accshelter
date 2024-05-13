@@ -19,7 +19,8 @@ def extract_and_load_profile(zip_profile_path, extract_to_dir):
 
     # Загружаем профиль в браузер
     options = Options()
-    options.profile = profile_dir
+    options.add_argument("-profile")
+    options.add_argument(profile_dir)
     service = Service(executable_path='./geckodriver-0.34.0/geckodriver-0.34.0/')  # Указываем путь к geckodriver
     driver = webdriver.Firefox(options=options, service=service)
     return driver
