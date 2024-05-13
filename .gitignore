@@ -10,4 +10,4 @@ __pycache__/
 .vscode/
 accounts.txt
 names_surnames.txt
-./geckodriver
+geckodriver-0.34.0/
