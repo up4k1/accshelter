@@ -88,11 +88,7 @@ def generate_password(length=12):
     password = ''.join(secrets.choice(characters) for i in range(length))
     return password
 
-def select_sex(driver, sex):
-    wait = WebDriverWait(driver, 10)
-    sex_xpath = f"//span[contains(text(), '{sex}')]"
-    sex_option = wait.until(EC.element_to_be_clickable((By.XPATH, sex_xpath)))
-    sex_option.click()
+
 
 
 def register_and_save_account(name, surname, year):
@@ -133,6 +129,7 @@ def register_account(driver, capmonster_api_key, name, surname, year):
         username_field = driver.find_element(By.ID, "aaa__input")
         human_type(username_field, username)
 
+        domain = select_domain(driver)
         # Генерация и ввод пароля
         password = generate_password()
         password_field = driver.find_element(By.ID, "password")
