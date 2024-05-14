@@ -17,7 +17,7 @@ def create_firefox_browser():
     options.set_preference("media.navigator.streams.fake", True)
     options.set_preference("network.proxy.type", 1)
     options.set_preference("network.proxy.socks", "192.168.3.238")
-    options.set_preference("network.proxy.socks_port", 3066)
+    options.set_preference("network.proxy.socks_port", 3067)
     options.set_preference("network.proxy.socks_version", 5)
     options.set_preference("network.proxy.socks_remote_dns", True)
     user_agent = get_random_user_agent()

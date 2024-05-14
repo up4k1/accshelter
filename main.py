@@ -84,9 +84,20 @@ def human_type(element, text):
         time.sleep(random.uniform(0.1, 0.2))
 
 def generate_password(length=12):
-    characters = string.ascii_letters + string.digits + "!@#$%^&*()"
-    password = ''.join(secrets.choice(characters) for i in range(length))
-    return password
+    while True:
+        characters = string.ascii_letters + string.digits + "!@#$%^&*()"
+        password = ''.join(secrets.choice(characters) for i in range(length))
+        
+        # Проверка на простые последовательности и популярные пароли
+        if not (any(char.isdigit() for char in password) and
+                any(char.isupper() for char in password) and
+                any(char.islower() for char in password) and
+                any(char in "!@#$%^&*()" for char in password) and
+                password not in ['123456', 'qwerty', 'password']):
+            continue
+        
+        return password
+
 
 
 
@@ -155,14 +166,21 @@ def register_account(driver, capmonster_api_key, name, surname, year):
             logging.error("Phone number request detected, registration aborted.")
             return False
 
-        # Сохранение деталей учётной записи
-        save_account_details(username, password)
-        profile_dir = driver.capabilities['moz:profile']
-        target_dir = f'full_profiles/{name}_{surname}'
-        save_full_profile(profile_dir, target_dir)
+        # Проверка попадания на страницу с входящей почтой
+        inbox_xpath = "//a[contains(@href, '/inbox/')]"
+        if wait.until(EC.presence_of_element_located((By.XPATH, inbox_xpath))):
+            # Сохранение деталей учётной записи
+            save_account_details(f"{username}@{domain}", password)
+            profile_dir = driver.capabilities['moz:profile']
+            target_dir = f'full_profiles/{name}_{surname}'
+            save_full_profile(profile_dir, target_dir)
 
-        logging.info(f"Account successfully registered for {name} {surname}")
-        return True
+            logging.info(f"Account successfully registered for {name} {surname}")
+            return True
+        else:
+            logging.error("Did not reach inbox page, registration aborted.")
+            return False
+
     except Exception as e:
         logging.error(f"An error occurred during registration for {name} {surname}: {e}")
         return False
