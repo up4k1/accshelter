@@ -19,7 +19,7 @@ def load_saved_profile(profile_path):
     return driver
 
 def main():
-    profile_path = 'full_profiles/Степан_Гончаров.zip'  # Укажи правильный путь к профилю
+    profile_path = 'full_profiles/Глеб_Левин.zip'  # Укажи правильный путь к профилю
     driver = load_saved_profile(profile_path)
     input("Press Enter to close the browser...")  # Пауза перед закрытием браузера
     driver.quit()

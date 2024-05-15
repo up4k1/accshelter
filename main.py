@@ -1,4 +1,7 @@
 from account_usage import *
+from configureproxy import load_proxy_list
+from browser import create_firefox_browser
+
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -30,9 +33,19 @@ import os
 from browser import create_firefox_browser 
 import sys
 import io
+import requests 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
+
+def get_external_ip():
+    try:
+        response = requests.get('https://api64.ipify.org?format=json')
+        ip = response.json()["ip"]
+        return ip
+    except requests.RequestException as e:
+        logging.error(f"Error getting external IP: {e}")
+        return None
 
 
 load_dotenv()
@@ -188,23 +201,47 @@ def register_account(driver, capmonster_api_key, name, surname, year):
         driver.quit()
     
 
+def register_and_save_account(name, surname, year, proxy=None):
+    try:
+        driver = create_firefox_browser(proxy)
+        if register_account(driver, capmonster_api_key, name, surname, year):
+            logging.info(f"Registration and profile saving completed for {name} {surname}")
+        else:
+            logging.info(f"Registration failed for {name} {surname}, profile not saved.")
+    except Exception as e:
+        logging.error(f"Error occurred for {name} {surname}: {str(e)}")
+    finally:
+        driver.quit()
+
 def main():
     names_surnames = []
-    # Чтение файла с именами и фамилиями
     with open("names_surnames.txt", "r", encoding="utf-8") as file:
         for line in file:
             if line.strip():
-                name, surname = line.strip().split()  # Предполагаем, что имя и фамилия разделены пробелом
+                name, surname = line.strip().split()
                 names_surnames.append((name, surname))
 
-    # Перемешивание списка имен и фамилий
+    proxies = load_proxy_list("proxies.txt")
+    if proxies:
+        logging.info(f"Loaded {len(proxies)} proxies from file.")
+    else:
+        logging.warning("No proxies loaded from file.")
+
+    external_ip = get_external_ip()
+    if external_ip:
+        logging.info(f"Your external IP is: {external_ip}")
+    else:
+        logging.warning("Could not determine external IP.")
+
     random.shuffle(names_surnames)
 
-    # Использование ThreadPoolExecutor для параллельной обработки
     with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = [executor.submit(register_and_save_account, name, surname, random.randint(1970, 2002)) for name, surname in names_surnames]
+        futures = []
+        for i, (name, surname) in enumerate(names_surnames):
+            proxy = proxies[i % len(proxies)] if proxies else None
+            futures.append(executor.submit(register_and_save_account, name, surname, random.randint(1970, 2002), proxy))
         for future in futures:
-            future.result()  # Ожидание завершения каждой задачи
+            future.result()
 
 if __name__ == "__main__":
     main()

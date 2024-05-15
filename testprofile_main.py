@@ -25,7 +25,7 @@ def extract_and_load_profile(zip_profile_path, extract_to_dir):
     return driver
 
 def main():
-    profile_zip = './full_profiles/Сергей_Новиков.zip'  # Путь к ZIP-архиву с профилем
+    profile_zip = './full_profiles/Глеб_Левин.zip'  # Путь к ZIP-архиву с профилем
     extract_to = './full_profiles/extracted'  # Папка для распаковки
     driver = extract_and_load_profile(profile_zip, extract_to)
     try:
